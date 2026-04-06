@@ -21,13 +21,15 @@ def analyze_image(file_bytes: bytes) -> str:
                     {
                         "type": "text",
                         "text": (
-                            "Analyze this clothing item image. "
-                            "Describe the item in a short, clear way:\n"
-                            "- item type\n"
-                            "- color\n"
-                            "- material\n"
-                            "- style vibe\n"
-                            "- season or occasion\n"
+                            "Analyze this clothing item image and act as a high fashion stylist for vogue \n. "
+                            "Describe:"
+                            "- Item breakdown color, material, occasion"
+                            "- What silhouette pairs best with these \n"
+                            "- 3 outfit ideas using this item\n"
+                            "- What materials/silhouettes/and colors to avoid when wearing this item \n"
+                            "- How can I dress this up or down\n"
+                            "Be specific and stylish not basic"
+                            
                         )
                     },
                     {
