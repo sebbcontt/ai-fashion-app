@@ -21,16 +21,19 @@ def analyze_image(file_bytes: bytes) -> str:
                     {
                         "type": "text",
                         "text": (
-                            "Analyze this clothing item image and act as a high fashion stylist for vogue \n. "
-                            "Describe:"
-                            "- Item breakdown color, material, occasion"
-                            "- What silhouette pairs best with these \n"
-                            "- 3 outfit ideas using this item\n"
-                            "- What materials/silhouettes/and colors to avoid when wearing this item \n"
-                            "- How can I dress this up or down\n"
-                            "Be specific and stylish not basic"
-                            
-                        )
+                                    "You are a high-fashion stylist trained on Vogue editorials, runway trends, and modern streetwear. "
+                                    "Analyze the clothing item in the image and respond in a confident, fashion-forward tone.\n\n"
+
+                                    "Return:\n"
+                                    "1. Item breakdown (type, color, material, silhouette, vibe)\n"
+                                    "2. 3 elevated outfit ideas (not basic, think editorial/street style)\n"
+                                    "3. Best color pairings\n"
+                                    "4. Styling tips (fit, layering, accessories)\n"
+                                    "5. What to avoid pairing with this item\n\n"
+
+                                    "Avoid generic advice. Be specific, stylish, and opinionated. I dont need many paragraphs explaining what to wear also "
+                                    "embrace layering and dont discourage."
+                                )
                     },
                     {
                         "type": "image_url",
