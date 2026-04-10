@@ -1,5 +1,6 @@
 import os
 import base64
+import imghdr
 from dotenv import load_dotenv
 from openai import OpenAI
 
@@ -21,7 +22,8 @@ def analyze_image(file_bytes: bytes) -> str:
                     {
                         "type": "text",
                         "text": (
-                                "You are a high-fashion stylist.\n\n"
+                                "You are a high-fashion stylist for vogue, master at color analysis and color pairing.\n\n"
+                
                                 "Return your response in VALID JSON format like this:\n\n"
                                 "{\n"
                                 "  \"item\": \"...\",\n"

@@ -27,8 +27,6 @@ export default function App() {
       });
 
       const data = await res.json();
-      console.log("API RESPONSE:", data);
-
       setResult(data.analysis || data);
     } catch (err) {
       console.error(err);
@@ -45,6 +43,7 @@ export default function App() {
         {/* HEADER */}
         <div style={styles.header}>
           <h1 style={styles.logo}>Boots Down</h1>
+          <div style={styles.headerLine}></div>
 
           <button
             style={styles.settingsBtn}
@@ -54,26 +53,33 @@ export default function App() {
           </button>
         </div>
 
-        <div style={styles.sectionDivider}></div>
+        {/* HERO */}
+        {!result && (
+          <div style={styles.hero}>
 
-        {/* UPLOAD */}
-        <div style={styles.uploadRow}>
-          <label style={styles.uploadButton}>
-            Upload
-            <input type="file" onChange={handleFileChange} hidden />
-          </label>
+            {/* 🔥 DESCRIPTION BUBBLE */}
+            <div style={styles.descriptionCard}>
+              <p style={styles.tagline}>
+                Upload a clothing item to get curated outfit ideas, color pairings,
+                and styling insights tailored to your piece.
+              </p>
+            </div>
 
-          <button
-            onClick={handleUpload}
-            style={styles.analyzeButton}
-            onMouseOver={(e) => (e.target.style.opacity = 0.8)}
-            onMouseOut={(e) => (e.target.style.opacity = 1)}
-          >
-            Analyze
-          </button>
-        </div>
+            <div style={styles.uploadRow}>
+              <label style={styles.uploadButton}>
+                Upload
+                <input type="file" onChange={handleFileChange} hidden />
+              </label>
 
-        <div style={styles.divider}></div>
+              {/* 🔥 ONLY SHOW AFTER UPLOAD */}
+              {file && (
+                <button onClick={handleUpload} style={styles.analyzeButton}>
+                  Analyze
+                </button>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* IMAGE */}
         {preview && (
@@ -82,8 +88,6 @@ export default function App() {
           </div>
         )}
 
-        {loading && <p style={styles.loading}>Analyzing...</p>}
-
         {/* RESULT */}
         {result && typeof result === "object" && (
           <div style={styles.resultCard}>
@@ -91,19 +95,15 @@ export default function App() {
 
             <div style={styles.innerDivider}></div>
 
-            {/* OUTFITS */}
             <h3 style={styles.subTitle}>Outfit Ideas</h3>
             <div style={styles.sectionDivider}></div>
 
             <div style={styles.grid}>
               {result.outfits?.map((o, i) => (
-                <div key={i} style={styles.outfitCard}>
-                  {o}
-                </div>
+                <div key={i} style={styles.outfitCard}>{o}</div>
               ))}
             </div>
 
-            {/* COLORS */}
             <h3 style={styles.subTitle}>Best Colors</h3>
             <div style={styles.sectionDivider}></div>
 
@@ -113,7 +113,6 @@ export default function App() {
               ))}
             </div>
 
-            {/* AVOID */}
             <h3 style={styles.subTitle}>Avoid</h3>
             <div style={styles.sectionDivider}></div>
 
@@ -125,102 +124,119 @@ export default function App() {
           </div>
         )}
       </div>
+
+      {/* LOADING */}
+      {loading && (
+        <div style={styles.loadingOverlay}>
+          <div style={styles.loader}></div>
+          <p style={styles.loadingText}>Analyzing your look...</p>
+        </div>
+      )}
     </div>
   );
 }
 
 const styles = {
 
-  /* 🔥 SIDE COLOR BORDERS */
+  /* 🔥 SOFTER GRADIENT */
   outer: {
     minHeight: "100vh",
-    background: "linear-gradient(to right, #8f4a91 0%, #C3C88C 15%, #C3C88C 85%, #7E0950 100%)",
+    background: "linear-gradient(to right, #a7749f 0%, #C3C88C 20%, #C3C88C 80%, #8a2c60 100%)",
     display: "flex",
     justifyContent: "center",
   },
 
-  /* CENTER CONTENT */
   page: {
     width: "100%",
     maxWidth: "900px",
     background: "#C3C88C",
-    padding: "0 30px 40px",
+    padding: "0 30px 60px",
     position: "relative",
   },
 
   header: {
-    width: "100%",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    paddingTop: "20px",
     position: "relative",
+    textAlign: "center",
+    marginTop: "30px",
   },
 
   logo: {
-    fontSize: "2.4rem",
+    fontSize: "3rem",
     fontWeight: "600",
     fontFamily: "Didot, serif",
+    letterSpacing: "1px",
+  },
+
+  /* 🔥 LINE UNDER TITLE */
+  headerLine: {
+    width: "120px",
+    height: "2px",
+    background: "#301C1D",
+    margin: "10px auto 0",
   },
 
   settingsBtn: {
     position: "absolute",
     right: "0",
+    top: "10px",
     background: "transparent",
     border: "none",
     fontSize: "20px",
     cursor: "pointer",
   },
 
-  sectionDivider: {
-    width: "100%",
-    height: "2px",
-    background: "rgba(0,0,0,0.2)",
-    margin: "20px 0",
+  hero: {
+    marginTop: "100px",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    gap: "25px",
   },
 
-  container: {},
+  /* 🔥 DESCRIPTION CARD */
+  descriptionCard: {
+    background: "#E3D6BF",
+    padding: "20px",
+    borderRadius: "12px",
+    maxWidth: "500px",
+    textAlign: "center",
+    border: "1px solid rgba(0,0,0,0.2)",
+  },
+
+  tagline: {
+    fontSize: "16px",
+    color: "#301C1D",
+    lineHeight: "1.6",
+  },
 
   uploadRow: {
     display: "flex",
-    gap: "10px",
-    marginBottom: "20px",
-    justifyContent: "center",
+    gap: "12px",
   },
 
   uploadButton: {
-    padding: "10px 18px",
+    padding: "12px 22px",
     background: "#8f4a91",
     color: "white",
-    border: "1px solid #ddd",
-    borderRadius: "8px",
+    borderRadius: "10px",
     cursor: "pointer",
-    fontSize: "14px",
   },
 
   analyzeButton: {
-    padding: "10px 18px",
+    padding: "12px 22px",
     background: "#7E0950",
     color: "white",
+    borderRadius: "10px",
     border: "none",
-    borderRadius: "8px",
     cursor: "pointer",
-    fontSize: "14px",
-  },
-
-  divider: {
-    width: "100%",
-    height: "1px",
-    background: "rgba(0,0,0,0.1)",
-    margin: "30px 0",
   },
 
   card: {
-    marginTop: "20px",
+    marginTop: "40px",
     background: "white",
     padding: "10px",
     borderRadius: "12px",
-    width: "300px",
+    width: "320px",
     marginLeft: "auto",
     marginRight: "auto",
   },
@@ -231,7 +247,7 @@ const styles = {
   },
 
   resultCard: {
-    marginTop: "25px",
+    marginTop: "40px",
     background: "#B5728A",
     padding: "30px",
     borderRadius: "12px",
@@ -244,37 +260,30 @@ const styles = {
   },
 
   sectionTitle: {
-    marginBottom: "10px",
-    fontSize: "1.4rem",
+    fontSize: "1.5rem",
     color: "#301C1D",
   },
 
   innerDivider: {
-    width: "100%",
     height: "1px",
     background: "rgba(0,0,0,0.1)",
     margin: "10px 0 15px",
   },
 
-  loading: {
-    marginTop: "10px",
-    fontStyle: "italic",
-    color: "#666",
-    textAlign: "center",
+  sectionDivider: {
+    height: "2px",
+    background: "rgba(0,0,0,0.2)",
+    margin: "10px 0 20px",
   },
 
   subTitle: {
-    marginTop: "15px",
-    marginBottom: "8px",
     fontSize: "1.1rem",
     color: "#301C1D",
   },
 
   grid: {
     display: "grid",
-    gridTemplateColumns: "1fr",
     gap: "15px",
-    marginBottom: "20px",
   },
 
   outfitCard: {
@@ -282,7 +291,6 @@ const styles = {
     padding: "16px",
     borderRadius: "12px",
     fontSize: "16px",
-    lineHeight: "1.5",
   },
 
   tag: {
@@ -292,5 +300,34 @@ const styles = {
     background: "#E3D6BF",
     borderRadius: "20px",
     fontSize: "13px",
+  },
+
+  loadingOverlay: {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    background: "rgba(0,0,0,0.3)",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    backdropFilter: "blur(4px)",
+  },
+
+  loader: {
+    width: "50px",
+    height: "50px",
+    border: "5px solid white",
+    borderTop: "5px solid #7E0950",
+    borderRadius: "50%",
+    animation: "spin 1s linear infinite",
+  },
+
+  loadingText: {
+    marginTop: "15px",
+    color: "white",
+    fontSize: "18px",
   },
 };
