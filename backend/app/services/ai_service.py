@@ -21,19 +21,21 @@ def analyze_image(file_bytes: bytes) -> str:
                     {
                         "type": "text",
                         "text": (
-                                    "You are a high-fashion stylist trained on Vogue editorials, runway trends, and modern streetwear. "
-                                    "Analyze the clothing item in the image and respond in a confident, fashion-forward tone.\n\n"
-
-                                    "Return:\n"
-                                    "1. Item breakdown (type, color, material, silhouette, vibe)\n"
-                                    "2. 3 elevated outfit ideas (not basic, think editorial/street style)\n"
-                                    "3. Best color pairings\n"
-                                    "4. Styling tips (fit, layering, accessories)\n"
-                                    "5. What to avoid pairing with this item\n\n"
-
-                                    "Avoid generic advice. Be specific, stylish, and opinionated. I dont need many paragraphs explaining what to wear also "
-                                    "embrace layering and dont discourage."
-                                )
+                                "You are a high-fashion stylist.\n\n"
+                                "Return your response in VALID JSON format like this:\n\n"
+                                "{\n"
+                                "  \"item\": \"...\",\n"
+                                "  \"outfits\": [\n"
+                                "    \"outfit 1\",\n"
+                                "    \"outfit 2\",\n"
+                                "    \"outfit 3\"\n"
+                                "    \"outfit 4\"\n"
+                                "  ],\n"
+                                "  \"colors\": [\"...\", \"...\"],\n"
+                                "  \"avoid\": [\"...\", \"...\"]\n"
+                                "}\n\n"
+                                "DO NOT include markdown. Only return JSON."
+                            )
                     },
                     {
                         "type": "image_url",
@@ -46,4 +48,5 @@ def analyze_image(file_bytes: bytes) -> str:
         ]
     )
 
-    return response.choices[0].message.content
+    import json
+    return json.loads(response.choices[0].message.content)
