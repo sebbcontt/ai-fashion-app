@@ -1,0 +1,142 @@
+import { useState } from "react";
+import "./styles.css";
+
+export default function App() {
+  const [file, setFile] = useState(null);
+  const [result, setResult] = useState(null);
+  const [style, setStyle] = useState("neutral");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleAnalyze = async () => {
+    if (!file) {
+      setError("Upload something first.");
+      return;
+    }
+
+    setLoading(true);
+    setError("");
+    setResult(null);
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("style", style);
+
+      const res = await fetch("http://127.0.0.1:8000/analyze-style", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!res.ok) throw new Error("Backend error");
+
+      const data = await res.json();
+      setResult(data.analysis || data);
+
+    } catch (err) {
+      console.error(err);
+      setError("Something went wrong.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="container">
+      <h1 className="logo">Closet Guide.</h1>
+
+      <p className="subtitle">
+        Upload a clothing item to get curated outfit ideas, color pairings, and styling direction.
+      </p>
+
+      {/* STYLE TOGGLE */}
+      <div className="style-toggle">
+        {["masculine", "feminine", "neutral"].map((opt) => (
+          <button
+            key={opt}
+            className={`style-pill ${style === opt ? "active" : ""}`}
+            onClick={() => setStyle(opt)}
+          >
+            {opt}
+          </button>
+        ))}
+      </div>
+
+      <div className="main">
+        {/* LEFT */}
+        <div className="left">
+          {!file ? (
+            <div className="upload-wrapper">
+              <label className="btn primary upload-btn">
+                Upload
+                <input
+                  type="file"
+                  hidden
+                  accept="image/*"
+                  onChange={(e) => setFile(e.target.files[0])}
+                />
+              </label>
+            </div>
+          ) : (
+            <>
+              {/* SAFE PREVIEW */}
+              {file.type !== "image/heic" ? (
+                <img
+                  src={URL.createObjectURL(file)}
+                  className="preview"
+                />
+              ) : (
+                <p>Preview not available for HEIC</p>
+              )}
+
+              <div className="btn-row">
+                <button className="btn secondary" onClick={() => setFile(null)}>
+                  Change
+                </button>
+
+                <button className="btn primary" onClick={handleAnalyze}>
+                  {loading ? "Analyzing..." : "Analyze"}
+                </button>
+              </div>
+            </>
+          )}
+
+          {error && <p className="error">{error}</p>}
+        </div>
+
+        {/* RIGHT */}
+        <div className="right">
+          {!result ? (
+            <div className="placeholder">
+              <h2>Styling results will appear here</h2>
+              <p>Upload an item and run analysis to see results.</p>
+            </div>
+          ) : (
+            <div className="results">
+              <h2>{result.item}</h2>
+
+              <h3>Outfits</h3>
+              {result.outfits?.map((o, i) => (
+                <p key={i}>{o}</p>
+              ))}
+
+              <h3>Best Colors</h3>
+              <div className="pill-row">
+                {result.colors?.map((c, i) => (
+                  <span key={i} className="pill">{c}</span>
+                ))}
+              </div>
+
+              <h3>Avoid</h3>
+              <div className="pill-row">
+                {result.avoid?.map((c, i) => (
+                  <span key={i} className="pill muted">{c}</span>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
