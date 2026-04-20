@@ -1,0 +1,14 @@
+# ignore secrets
+.env
+
+# python stuff
+venv/
+__pycache__/
+*.pyc
+
+# node stuff
+node_modules/
+dist/
+
+# mac junk
+.DS_Store
