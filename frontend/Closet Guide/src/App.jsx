@@ -114,25 +114,42 @@ export default function App() {
             </div>
           ) : (
             <div className="results">
-              <h2>{result.item}</h2>
+              <h2 className="result-title">{result.item}</h2>
 
-              <h3>Outfits</h3>
-              {result.outfits?.map((o, i) => (
-                <p key={i}>{o}</p>
-              ))}
-
-              <h3>Best Colors</h3>
-              <div className="pill-row">
-                {result.colors?.map((c, i) => (
-                  <span key={i} className="pill">{c}</span>
-                ))}
+              <div className="results-section">
+                <p className="section-label">Outfits</p>
+                <div className="outfit-list">
+                  {result.outfits?.map((o, i) => (
+                    <div className="outfit-card" key={i}>
+                      <div className="outfit-number">{i + 1}</div>
+                      <p className="outfit-text">{o}</p>
+                    </div>
+                  ))}
+                </div>
               </div>
 
-              <h3>Avoid</h3>
-              <div className="pill-row">
-                {result.avoid?.map((c, i) => (
-                  <span key={i} className="pill muted">{c}</span>
-                ))}
+              <div className="results-section">
+                <p className="section-label">Best Colors</p>
+                <div className="pill-row">
+                  {result.colors?.map((c, i) => (
+                    <span key={i} className="color-pill">
+                      <span
+                        className="color-swatch"
+                        style={{ background: c.toLowerCase() }}
+                      ></span>
+                      {c}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <div className="results-section">
+                <p className="section-label">Avoid</p>
+                <div className="pill-row">
+                  {result.avoid?.map((c, i) => (
+                    <span key={i} className="avoid-pill">{c}</span>
+                  ))}
+                </div>
               </div>
             </div>
           )}
