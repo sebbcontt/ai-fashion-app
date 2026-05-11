@@ -23,7 +23,7 @@ export default function App() {
       formData.append("file", file);
       formData.append("style", style);
 
-      const API_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
+      const API_URL = (import.meta.env.VITE_API_URL || "http://127.0.0.1:8000").replace(/\/$/, "");
       const res = await fetch(`${API_URL}/analyze-style`, {
         method: "POST",
         body: formData,
