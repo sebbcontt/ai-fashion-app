@@ -4,9 +4,13 @@ import json
 from dotenv import load_dotenv
 from openai import OpenAI
 from PIL import Image
+from pillow_heif import register_heif_opener
 import io
 
 load_dotenv()
+
+# Allow Pillow to open HEIC / HEIF images (the default format on iPhones)
+register_heif_opener()
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
@@ -36,21 +40,31 @@ STRICT RULES:
 - feminine: soft fabrics, flowy silhouettes, waist emphasis, heels, skirts, dresses allowed
 - neutral: balanced, minimal, androgynous, modern
 
-You MUST reflect the selected style in EVERY outfit.
+You MUST reflect the selected style in EVERY outfit and recommendation.
 
 Return ONLY valid JSON in this exact shape:
 {{
   "item": "short description of the item",
+  "vibe": "a 2-4 word style descriptor for this item (e.g. 'streetwear minimalist', 'old-money casual')",
+  "seasons": ["season 1", "season 2"],
   "outfits": [
     "outfit idea 1",
     "outfit idea 2",
     "outfit idea 3",
     "outfit idea 4"
   ],
+  "styling_tips": [
+    "specific tip on fit, tucking, layering, or proportion 1",
+    "specific tip 2",
+    "specific tip 3"
+  ],
+  "where_to_wear": ["occasion 1", "occasion 2", "occasion 3"],
+  "accessories": ["accessory suggestion 1", "accessory suggestion 2", "accessory suggestion 3"],
   "colors": ["color 1", "color 2", "color 3"],
   "avoid": ["avoid 1", "avoid 2", "avoid 3"]
 }}
 
+Keep every string concise. Seasons must be drawn from: spring, summer, fall, winter.
 No markdown. JSON only.
 """
 
@@ -83,14 +97,24 @@ No markdown. JSON only.
         print("OPENAI ERROR:", e)
         return {
             "item": "API error",
+            "vibe": "",
+            "seasons": [],
             "outfits": [],
+            "styling_tips": [],
+            "where_to_wear": [],
+            "accessories": [],
             "colors": [],
             "avoid": [],
         }
 
     return {
         "item": data.get("item", ""),
+        "vibe": data.get("vibe", ""),
+        "seasons": data.get("seasons", []),
         "outfits": data.get("outfits", []),
+        "styling_tips": data.get("styling_tips", []),
+        "where_to_wear": data.get("where_to_wear", []),
+        "accessories": data.get("accessories", []),
         "colors": data.get("colors", []),
         "avoid": data.get("avoid", []),
     }
