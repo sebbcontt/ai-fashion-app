@@ -92,6 +92,14 @@ export default function App() {
 
   return (
     <div className="container">
+      {/* decorative Y2K stickers */}
+      <span className="sticker sticker-1">✦</span>
+      <span className="sticker sticker-2">★</span>
+      <span className="sticker sticker-3">✧</span>
+      <span className="sticker sticker-4">♡</span>
+      <span className="sticker sticker-5">✦</span>
+      <span className="sticker sticker-6">★</span>
+
       <h1 className="logo">Closet Guide.</h1>
 
       <p className="subtitle">
@@ -263,15 +271,22 @@ export default function App() {
               <div className="results-section">
                 <p className="section-label">Best Colors</p>
                 <div className="pill-row">
-                  {result.colors?.map((c, i) => (
-                    <span key={i} className="color-pill">
-                      <span
-                        className="color-swatch"
-                        style={{ background: c.toLowerCase() }}
-                      ></span>
-                      {c}
-                    </span>
-                  ))}
+                  {result.colors?.map((c, i) => {
+                    // Colors come back as { name, hex } objects, but fall
+                    // back gracefully if a plain string is ever returned.
+                    const name = typeof c === "string" ? c : c.name;
+                    const hex =
+                      typeof c === "string" ? c.toLowerCase() : c.hex;
+                    return (
+                      <span key={i} className="color-pill">
+                        <span
+                          className="color-swatch"
+                          style={{ background: hex }}
+                        ></span>
+                        {name}
+                      </span>
+                    );
+                  })}
                 </div>
               </div>
 

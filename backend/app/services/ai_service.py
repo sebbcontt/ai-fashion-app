@@ -62,10 +62,15 @@ Return ONLY valid JSON in this exact shape:
   ],
   "where_to_wear": ["occasion 1", "occasion 2", "occasion 3"],
   "accessories": ["accessory suggestion 1", "accessory suggestion 2", "accessory suggestion 3"],
-  "colors": ["color 1", "color 2", "color 3"],
+  "colors": [
+    {{"name": "color name 1", "hex": "#RRGGBB"}},
+    {{"name": "color name 2", "hex": "#RRGGBB"}},
+    {{"name": "color name 3", "hex": "#RRGGBB"}}
+  ],
   "avoid": ["avoid 1", "avoid 2", "avoid 3"]
 }}
 
+For each color, "hex" MUST be an accurate 6-digit hex code matching the color name.
 Keep every string concise. Seasons must be drawn from: spring, summer, fall, winter.
 No markdown. JSON only.
 """
