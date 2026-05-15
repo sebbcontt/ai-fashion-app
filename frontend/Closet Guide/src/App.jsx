@@ -7,6 +7,7 @@ export default function App() {
   const [style, setStyle] = useState("neutral");
   const [loading, setLoading] = useState(false);
   const [converting, setConverting] = useState(false);
+  const [noPreview, setNoPreview] = useState(false);
   const [error, setError] = useState("");
 
   const handleFileSelect = async (e) => {
@@ -15,6 +16,7 @@ export default function App() {
 
     setError("");
     setResult(null);
+    setNoPreview(false);
 
     const isHeic =
       selected.type === "image/heic" ||
@@ -22,7 +24,9 @@ export default function App() {
       /\.hei[cf]$/i.test(selected.name);
 
     if (isHeic) {
-      // Browsers can't display HEIC, so convert it to JPEG in-browser.
+      // Try to convert HEIC to JPEG so the browser can show a preview.
+      // If that fails, we still upload the original file — the backend
+      // can process HEIC directly.
       setConverting(true);
       try {
         const heic2any = (await import("heic2any")).default;
@@ -39,8 +43,10 @@ export default function App() {
         );
         setFile(jpegFile);
       } catch (err) {
-        console.error(err);
-        setError("Couldn't read that photo. Try a different one.");
+        console.error("HEIC preview conversion failed, uploading original:", err);
+        // Preview isn't possible, but the upload will still work.
+        setFile(selected);
+        setNoPreview(true);
       } finally {
         setConverting(false);
       }
@@ -124,12 +130,26 @@ export default function App() {
             </div>
           ) : (
             <>
-              <img src={URL.createObjectURL(file)} className="preview" alt="upload preview" />
+              {noPreview ? (
+                <div className="preview no-preview">
+                  <p className="no-preview-title">HEIC photo ready</p>
+                  <p className="no-preview-sub">{file.name}</p>
+                </div>
+              ) : (
+                <img
+                  src={URL.createObjectURL(file)}
+                  className="preview"
+                  alt="upload preview"
+                />
+              )}
 
               <div className="btn-row">
                 <button
                   className="btn secondary"
-                  onClick={() => setFile(null)}
+                  onClick={() => {
+                    setFile(null);
+                    setNoPreview(false);
+                  }}
                 >
                   Change
                 </button>

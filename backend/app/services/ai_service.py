@@ -4,12 +4,15 @@ import json
 from dotenv import load_dotenv
 from openai import OpenAI
 from PIL import Image
+from pillow_heif import register_heif_opener
 import io
 
 load_dotenv()
 
-# HEIC images are converted to JPEG in the browser (via heic2any) before
-# upload, so the backend only ever receives standard web image formats.
+# Allow Pillow to open HEIC / HEIF images (the default format on iPhones).
+# The frontend attempts a browser-side conversion for the preview, but the
+# original HEIC may still be uploaded here if that conversion fails.
+register_heif_opener()
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 

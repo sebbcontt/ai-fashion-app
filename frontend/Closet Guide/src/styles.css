@@ -118,6 +118,35 @@ body {
     inset 0 1px 0 rgba(255,255,255,0.4);
 }
 
+.no-preview {
+  height: 260px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 24px;
+  box-sizing: border-box;
+
+  background: rgba(255,255,255,0.5);
+  backdrop-filter: blur(12px);
+  text-align: center;
+}
+
+.no-preview-title {
+  margin: 0;
+  font-weight: 700;
+  color: rgba(0,0,0,0.75);
+}
+
+.no-preview-sub {
+  margin: 0;
+  font-size: 0.8rem;
+  color: rgba(0,0,0,0.5);
+  word-break: break-word;
+}
+
 .btn {
   padding: 14px 32px;
   border-radius: 999px;
