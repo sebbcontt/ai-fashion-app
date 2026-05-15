@@ -116,7 +116,7 @@ export default function App() {
                 <input
                   type="file"
                   hidden
-                  accept="image/*,.heic,.heif"
+                  accept=".jpg,.jpeg,.png,.webp,.heic,.heif,.gif,.bmp"
                   onChange={handleFileSelect}
                 />
               </label>
